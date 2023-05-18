@@ -1,0 +1,98 @@
+@font-face {
+    font-family: "Yamatha";
+    src: url(Yamatha.ttf);
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    color:#090302;
+}
+
+button {
+    height: 50px;
+    width: 50px;
+    box-sizing: border-box;
+    border-radius: 3px;
+    background-color: #e7e393;
+    border: 3px solid #fe5f00;
+    font-weight: 500;
+}
+
+.header {
+    height: 80px;
+    background-color: #6e7e86;
+    font-size: 64px;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Yamatha";
+    padding-top: 10px;
+}
+
+.center {
+    flex-grow: 1;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    background-color: #ddfff7;
+}
+
+.screen {
+    width:224px;
+    border-radius: 3px;
+    box-sizing: border-box;
+    background-color: #e7e393;
+    border: 3px solid #fe5f00;
+    padding: 6px 15px;
+}
+
+.operation {
+    display:flex;
+    justify-content: end;
+    height: 20px;
+    font-size: 20px;
+}
+
+.input {
+    display:flex;
+    justify-content: end;
+    height: 32px;
+    font-size: 30px;
+}
+
+.calculator {
+    display:flex;
+    flex-direction: column;    
+    justify-content: center;
+    gap: 8px;
+    box-sizing: border-box;
+    align-items: center;
+    background-color: #ff9555;
+    border: 3px solid #fe5f00;
+    border-radius: 6px;
+    padding: 15px;
+}
+
+.screen {
+    height: 70px;
+}
+
+.row {
+    height:50px;
+    display: flex;
+    gap:8px
+}
+
+.footer {
+    height:50px;
+    background-color: #6e7e86;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
