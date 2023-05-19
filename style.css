@@ -3,6 +3,11 @@
     src: url(Yamatha.ttf);
 }
 
+@font-face {
+    font-family: "Digital-7";
+    src: url(Digital-7edited.ttf);
+}
+
 body {
     margin: 0;
     min-height: 100vh;
@@ -19,7 +24,10 @@ button {
     border-radius: 3px;
     background-color: #e7e393;
     border: 3px solid #fe5f00;
-    font-weight: 500;
+    font-weight: 700;
+    display:flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .header {
@@ -31,6 +39,7 @@ button {
     justify-content: center;
     font-family: "Yamatha";
     padding-top: 10px;
+    font-weight: 600;
 }
 
 .center {
@@ -48,7 +57,8 @@ button {
     box-sizing: border-box;
     background-color: #e7e393;
     border: 3px solid #fe5f00;
-    padding: 6px 15px;
+    padding: 6px 9.5px;
+    font-family: "Digital-7";
 }
 
 .operation {
@@ -56,6 +66,7 @@ button {
     justify-content: end;
     height: 20px;
     font-size: 20px;
+    font-family: 'Digital-7', sans-serif;
 }
 
 .input {
@@ -76,6 +87,7 @@ button {
     border: 3px solid #fe5f00;
     border-radius: 6px;
     padding: 15px;
+    font-family:sans-serif;
 }
 
 .screen {
@@ -86,6 +98,24 @@ button {
     height:50px;
     display: flex;
     gap:8px
+}
+
+.mult {
+    font-size:18px;
+    font-weight: bold;
+}
+
+.division {
+    font-size: 18px;
+}
+
+.plus, .minus, .equal {
+    font-size: 24px;
+    font-weight: 300;
+}
+
+.dot {
+    font-size: 10px;
 }
 
 .footer {
