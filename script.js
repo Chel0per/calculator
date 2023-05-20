@@ -15,6 +15,8 @@ let operation = document.querySelector(".operation");
 let inputState = 0;
 let hasDot = false;
 let method = "";
+let previousValue = 0;
+let usePreviousValue = false;
 
 function digitsAfterDot (string) {
 
@@ -72,10 +74,21 @@ function handleStringSize (result){
 
     let string = result.toString();
 
+    if (string.length > 14){
+        previousValue = result;
+        usePreviousValue = true;
+    }
+    else {
+        previousValue = 0;
+        usePreviousValue = false;
+    }
+
     let numbersBeforeDot = digitsBeforeDot(string);
     let numbersAfterDot = digitsAfterDot(string);
 
-    if(numbersAfterDot > 0) return result.toFixed(13 - numbersBeforeDot).toString();
+    if(numbersAfterDot > 0){
+        return result.toFixed(13 - numbersBeforeDot);  
+    } 
     else return result.toString();
 
 }
@@ -113,12 +126,14 @@ dotButton.addEventListener("click", () => {
 })
 
 deleteButton.addEventListener("click", () => {
-    if(input.innerHTML.length <= 1 || input.innerHTML === "DON'T DO THAT!"){
+    if(input.innerHTML.length <= 1 || input.innerHTML === "DON'T DO THIS!"){
         input.innerHTML = "0";
         operation.innerHTML = "";
         inputState = 0;
         hasDot = false;
-        method = "";  
+        method = "";
+        previousValue = 0;
+        usePreviousValue = false;  
     }
     else{
         if(input.innerHTML[input.innerHTML.length - 1] === "."){
@@ -134,11 +149,13 @@ clearButton.addEventListener("click", () => {
     operation.innerHTML = "";
     inputState = 0;
     hasDot = false;
-    method = "";  
+    method = "";
+    previousValue = 0;
+    usePreviousValue = false;  
 });
 
 plusButton.addEventListener("click", () => {
-    if(input.innerHTML === "DON'T DO THAT!") input.innerHTML = "0";
+    if(input.innerHTML === "DON'T DO THIS!") input.innerHTML = "0";
     operation.innerHTML = input.innerHTML + " +";
     method = "addition";
     inputState = 0;
@@ -146,7 +163,7 @@ plusButton.addEventListener("click", () => {
 })
 
 minusButton.addEventListener("click", () => {
-    if(input.innerHTML === "DON'T DO THAT!") input.innerHTML = "0";
+    if(input.innerHTML === "DON'T DO THIS!") input.innerHTML = "0";
     operation.innerHTML = input.innerHTML + " -";
     method = "substraction";
     inputState = 0;
@@ -154,9 +171,17 @@ minusButton.addEventListener("click", () => {
 })
 
 multButton.addEventListener("click", () => {
-    if(input.innerHTML === "DON'T DO THAT!") input.innerHTML = "0";
+    if(input.innerHTML === "DON'T DO THIS!") input.innerHTML = "0";
     operation.innerHTML = input.innerHTML + " x";
     method = "multiplication";
+    inputState = 0;
+    hasDot = false;
+})
+
+divButton.addEventListener("click", () => {
+    if(input.innerHTML === "DON'T DO THIS!") input.innerHTML = "0";
+    operation.innerHTML = input.innerHTML + " /";
+    method = "division";
     inputState = 0;
     hasDot = false;
 })
@@ -165,27 +190,43 @@ powButton.addEventListener("click", () => {
     
     let maxAfterDot = 0;
     
-    if(input.innerHTML !== "DON'T DO THAT!"){
+    if(input.innerHTML !== "DON'T DO THIS!"){
         maxAfterDot = 2*digitsAfterDot(input.innerHTML);
         operation.innerHTML = input.innerHTML + " ^2 =";
-        n = parseFloat(input.innerHTML);
-        result = n*n;
-        input.innerHTML = trim(result.toFixed(maxAfterDot).toString());
+        let n = parseFloat(input.innerHTML);
+        let result;
+        if (usePreviousValue) result = previousValue*previousValue;
+        else result = n*n;
+        input.innerHTML = trim(handleStringSize(parseFloat(result.toFixed(maxAfterDot))));
         method = "waiting";
         inputState = 0;
         hasDot = false;
     }
 })
 
-divButton.addEventListener("click", () => {
-    if(input.innerHTML === "DON'T DO THAT!") input.innerHTML = "0";
-    operation.innerHTML = input.innerHTML + " /";
-    method = "division";
-    inputState = 0;
-    hasDot = false;
+sqrButton.addEventListener("click", () => {
+    
+    if(input.innerHTML !== "DON'T DO THIS!"){
+        operation.innerHTML = input.innerHTML + " ^(1/2) =";
+        let n = parseFloat(input.innerHTML);
+        if (n >= 0){
+            let result;
+            if (usePreviousValue) result = Math.sqrt(previousValue);
+            else result = Math.sqrt(n);
+            input.innerHTML = trim(handleStringSize(result));
+            method = "waiting";
+            inputState = 0;
+            hasDot = false;
+        }
+        else {
+            operation.innerHTML =  "";
+            input.innerHTML = "DON'T DO THIS!";
+            method = "waiting";
+            inputState = 0;
+            hasDot = false;
+        }  
+    }
 })
-
-
 
 equalButton.addEventListener("click", () => {
 
@@ -197,9 +238,11 @@ equalButton.addEventListener("click", () => {
         maxAfterDot = Math.max(digitsAfterDot(s1),digitsAfterDot(s2));
         let n1 = parseFloat(s1);
         let n2 = parseFloat(s2);
-        let result = n1 + n2;
+        let result;
+        if (usePreviousValue) result = previousValue + n2;
+        else result = n1 + n2;
         operation.innerHTML =  operation.innerHTML + " " + input.innerHTML + " =";
-        input.innerHTML = trim(result.toFixed(maxAfterDot).toString());
+        input.innerHTML = trim(handleStringSize(parseFloat(result.toFixed(maxAfterDot))));
         method = "waiting";
         inputState = 0;
         hasDot = false;
@@ -210,9 +253,11 @@ equalButton.addEventListener("click", () => {
         maxAfterDot = Math.max(digitsAfterDot(s1),digitsAfterDot(s2));
         let n1 = parseFloat(s1);
         let n2 = parseFloat(s2);
-        let result = n1 - n2;
+        let result;
+        if (usePreviousValue) result = previousValue - n2;
+        else result = n1 - n2;
         operation.innerHTML =  operation.innerHTML + " " + input.innerHTML + " =";
-        input.innerHTML = trim(result.toFixed(maxAfterDot).toString());
+        input.innerHTML = trim(handleStringSize(parseFloat(result.toFixed(maxAfterDot))));
         method = "waiting";
         inputState = 0;
         hasDot = false;
@@ -223,9 +268,11 @@ equalButton.addEventListener("click", () => {
         maxAfterDot = digitsAfterDot(s1) + digitsAfterDot(s2);
         let n1 = parseFloat(s1);
         let n2 = parseFloat(s2);
-        let result = n1 * n2;
+        let result;
+        if (usePreviousValue) result = previousValue*n2;
+        else result = n1*n2;
         operation.innerHTML =  operation.innerHTML + " " + input.innerHTML + " =";
-        input.innerHTML = trim(result.toFixed(maxAfterDot).toString());
+        input.innerHTML = trim(handleStringSize(parseFloat(result.toFixed(maxAfterDot))));
         method = "waiting";
         inputState = 0;
         hasDot = false;
@@ -236,7 +283,9 @@ equalButton.addEventListener("click", () => {
         let n1 = parseFloat(s1);
         let n2 = parseFloat(s2);
         if(n2 !== 0){
-            let result = n1 / n2;
+            let result;
+            if (usePreviousValue) result = previousValue/n2;
+            else result = result = n1/n2;
             operation.innerHTML =  operation.innerHTML + " " + input.innerHTML + " =";
             input.innerHTML = trim(handleStringSize(result));
             method = "waiting";
@@ -245,10 +294,10 @@ equalButton.addEventListener("click", () => {
         }
         else{
             operation.innerHTML =  "";
-            input.innerHTML = "DON'T DO THAT!";
+            input.innerHTML = "DON'T DO THIS!";
             method = "waiting";
             inputState = 0;
             hasDot = false;
-        } 
+        }
     }
 })
