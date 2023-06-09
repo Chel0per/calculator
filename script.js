@@ -269,10 +269,12 @@ equalButton.addEventListener("click", () => {
         let n1 = parseFloat(s1);
         let n2 = parseFloat(s2);
         let result;
+        console.log(usePreviousValue)
+        console.log(previousValue)
         if (usePreviousValue) result = previousValue*n2;
         else result = n1*n2;
         operation.innerHTML =  operation.innerHTML + " " + input.innerHTML + " =";
-        input.innerHTML = trim(handleStringSize(parseFloat(result.toFixed(maxAfterDot))));
+        input.innerHTML = trim(handleStringSize(result));
         method = "waiting";
         inputState = 0;
         hasDot = false;
@@ -284,8 +286,10 @@ equalButton.addEventListener("click", () => {
         let n2 = parseFloat(s2);
         if(n2 !== 0){
             let result;
+            console.log(usePreviousValue)
+            console.log(previousValue)
             if (usePreviousValue) result = previousValue/n2;
-            else result = result = n1/n2;
+            else result = n1/n2;
             operation.innerHTML =  operation.innerHTML + " " + input.innerHTML + " =";
             input.innerHTML = trim(handleStringSize(result));
             method = "waiting";
