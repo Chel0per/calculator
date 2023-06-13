@@ -74,6 +74,13 @@ function handleStringSize (result){
 
     let string = result.toString();
 
+    if (string.slice(-4,-2) === "e+"){
+        operation.innerHTML =  "";
+        previousValue = 0;
+        usePreviousValue = false;
+        return "WHY SO BIG BRO?"; 
+    }
+
     if (string.length > 14){
         previousValue = result;
         usePreviousValue = true;
@@ -87,9 +94,41 @@ function handleStringSize (result){
     let numbersAfterDot = digitsAfterDot(string);
 
     if(numbersAfterDot > 0){
-        return result.toFixed(13 - numbersBeforeDot);  
+        let resultString = result.toFixed(13 - Math.min(numbersBeforeDot,13));
+        return resultString;        
     } 
-    else return result.toString();
+    else {
+        if (numbersBeforeDot <= 14){
+            return result.toString();
+        }
+        else {
+            let numbersAfterMax = numbersBeforeDot - 14;
+
+            if (numbersAfterMax + 7 < 10){
+            let powValue = numbersAfterMax + 7;
+            let resultString = result.toString();
+            return resultString.slice(0,resultString.length -7 - numbersAfterMax) + " x 10^" + powValue.toString();
+            }
+            else{
+                let powValue = numbersAfterMax + 8;
+                let resultString = result.toString();
+                return resultString.slice(0,resultString.length -8 - numbersAfterMax) + " x 10^" + powValue.toString();
+            }
+        }
+    }
+
+}
+
+function handleOperationSize(){
+    
+    let operationString = operation.innerHTML + " " + input.innerHTML + " =";
+    
+    if (operationString.length <= 22){
+        return operationString;
+    }
+    else {
+        return "..." + operationString.slice(operationString.length - 21,operationString.length);
+    }
 
 }
 
@@ -126,7 +165,7 @@ dotButton.addEventListener("click", () => {
 })
 
 deleteButton.addEventListener("click", () => {
-    if(input.innerHTML.length <= 1 || input.innerHTML === "DON'T DO THIS!"){
+    if(input.innerHTML.length <= 1 || input.innerHTML === "DON'T DO THIS!" || input.innerHTML === "WHY SO BIG BRO?"){
         input.innerHTML = "0";
         operation.innerHTML = "";
         inputState = 0;
@@ -155,7 +194,7 @@ clearButton.addEventListener("click", () => {
 });
 
 plusButton.addEventListener("click", () => {
-    if(input.innerHTML === "DON'T DO THIS!") input.innerHTML = "0";
+    if(input.innerHTML === "DON'T DO THIS!" || input.innerHTML === "WHY SO BIG BRO?") input.innerHTML = "0";
     operation.innerHTML = input.innerHTML + " +";
     method = "addition";
     inputState = 0;
@@ -163,7 +202,7 @@ plusButton.addEventListener("click", () => {
 })
 
 minusButton.addEventListener("click", () => {
-    if(input.innerHTML === "DON'T DO THIS!") input.innerHTML = "0";
+    if(input.innerHTML === "DON'T DO THIS!" || input.innerHTML === "WHY SO BIG BRO?") input.innerHTML = "0";
     operation.innerHTML = input.innerHTML + " -";
     method = "substraction";
     inputState = 0;
@@ -171,7 +210,7 @@ minusButton.addEventListener("click", () => {
 })
 
 multButton.addEventListener("click", () => {
-    if(input.innerHTML === "DON'T DO THIS!") input.innerHTML = "0";
+    if(input.innerHTML === "DON'T DO THIS!" || input.innerHTML === "WHY SO BIG BRO?") input.innerHTML = "0";
     operation.innerHTML = input.innerHTML + " x";
     method = "multiplication";
     inputState = 0;
@@ -179,7 +218,7 @@ multButton.addEventListener("click", () => {
 })
 
 divButton.addEventListener("click", () => {
-    if(input.innerHTML === "DON'T DO THIS!") input.innerHTML = "0";
+    if(input.innerHTML === "DON'T DO THIS!" || input.innerHTML === "WHY SO BIG BRO?") input.innerHTML = "0";
     operation.innerHTML = input.innerHTML + " /";
     method = "division";
     inputState = 0;
@@ -190,7 +229,7 @@ powButton.addEventListener("click", () => {
     
     let maxAfterDot = 0;
     
-    if(input.innerHTML !== "DON'T DO THIS!"){
+    if(input.innerHTML !== "DON'T DO THIS!" && input.innerHTML !== "WHY SO BIG BRO?"){
         maxAfterDot = 2*digitsAfterDot(input.innerHTML);
         operation.innerHTML = input.innerHTML + " ^2 =";
         let n = parseFloat(input.innerHTML);
@@ -206,7 +245,7 @@ powButton.addEventListener("click", () => {
 
 sqrButton.addEventListener("click", () => {
     
-    if(input.innerHTML !== "DON'T DO THIS!"){
+    if(input.innerHTML !== "DON'T DO THIS!" && input.innerHTML !== "WHY SO BIG BRO?"){
         operation.innerHTML = input.innerHTML + " ^(1/2) =";
         let n = parseFloat(input.innerHTML);
         if (n >= 0){
@@ -241,7 +280,7 @@ equalButton.addEventListener("click", () => {
         let result;
         if (usePreviousValue) result = previousValue + n2;
         else result = n1 + n2;
-        operation.innerHTML =  operation.innerHTML + " " + input.innerHTML + " =";
+        operation.innerHTML =  handleOperationSize();
         input.innerHTML = trim(handleStringSize(parseFloat(result.toFixed(maxAfterDot))));
         method = "waiting";
         inputState = 0;
@@ -256,7 +295,7 @@ equalButton.addEventListener("click", () => {
         let result;
         if (usePreviousValue) result = previousValue - n2;
         else result = n1 - n2;
-        operation.innerHTML =  operation.innerHTML + " " + input.innerHTML + " =";
+        operation.innerHTML =  handleOperationSize();
         input.innerHTML = trim(handleStringSize(parseFloat(result.toFixed(maxAfterDot))));
         method = "waiting";
         inputState = 0;
@@ -269,11 +308,9 @@ equalButton.addEventListener("click", () => {
         let n1 = parseFloat(s1);
         let n2 = parseFloat(s2);
         let result;
-        console.log(usePreviousValue)
-        console.log(previousValue)
         if (usePreviousValue) result = previousValue*n2;
         else result = n1*n2;
-        operation.innerHTML =  operation.innerHTML + " " + input.innerHTML + " =";
+        operation.innerHTML =  handleOperationSize();
         input.innerHTML = trim(handleStringSize(result));
         method = "waiting";
         inputState = 0;
@@ -290,7 +327,7 @@ equalButton.addEventListener("click", () => {
             console.log(previousValue)
             if (usePreviousValue) result = previousValue/n2;
             else result = n1/n2;
-            operation.innerHTML =  operation.innerHTML + " " + input.innerHTML + " =";
+            operation.innerHTML =  handleOperationSize();
             input.innerHTML = trim(handleStringSize(result));
             method = "waiting";
             inputState = 0;
